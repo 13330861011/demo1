@@ -3,194 +3,195 @@
 <head>
   <meta charset="utf-8">
   <title>专注 25 分钟，治愈一整天 | ADHD 闭环系统</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <!-- 国内 CDN，100% 可用 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Bootstrap & Icons -->
   <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+  
+  <!-- 自定义样式 -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-gradient">
-  <div class="container-fluid">
-    <span class="navbar-brand fw-bold">专注 25 分钟，治愈一整天</span>
-  </div>
-</nav>
-
-<div class="container-fluid mt-4">
-  <div class="row g-4">
-    <!-- 任务 -->
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <span>今日任务</span>
-          <button class="btn btn-sm btn-primary" id="addTaskBtn" data-bs-toggle="modal" data-bs-target="#addTaskModal"><i class="bi bi-plus-lg"></i></button>
-        </div>
-        <ul id="taskList" class="list-group list-group-flush"></ul>
-        <div class="card-footer text-center">
-          <small class="text-muted">累计完成 <span id="doneCount">0</span> 个番茄</small>
-        </div>
-      </div>
+  <!-- 导航栏 -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <span class="navbar-brand fw-bold">专注 25 分钟，治愈一整天</span>
     </div>
+  </nav>
 
-    <!-- 番茄钟 -->
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-header text-center fw-bold">番茄钟</div>
-        <div class="card-body text-center">
-          <div class="timer" id="timer">25:00</div>
-          <button class="btn btn-success btn-lg" id="startBtn"><i class="bi bi-play-fill"></i> 开始专注</button>
-          <button class="btn btn-outline-secondary mt-2" id="resetBtn"><i class="bi bi-arrow-clockwise"></i> 重置</button>
+  <!-- 主容器 -->
+  <div class="container-fluid mt-4">
+    <div class="row g-4">
+      <!-- 今日任务 -->
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span>今日任务</span>
+            <button class="btn btn-sm btn-primary" id="addTaskBtn" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+              <i class="bi bi-plus-lg"></i>
+            </button>
+          </div>
+          <ul id="taskList" class="list-group list-group-flush"></ul>
+          <div class="card-footer text-center">
+            <small class="text-muted">累计完成 <span id="doneCount">0</span> 个番茄</small>
+          </div>
         </div>
       </div>
-      <div class="card mt-3">
-        <div class="card-header fw-bold">专注时长</div>
-        <div class="card-body"><canvas id="focusChart" height="150"></canvas></div>
-      </div>
-    </div>
 
-    <!-- 留言墙 -->
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-header fw-bold">匿名留言墙</div>
-        <ul id="msgWall" class="list-group list-group-flush"></ul>
-        <div class="card-body">
-          <textarea id="msgText" class="form-control mb-2" rows="2" placeholder="留下你的鼓励或感受..."></textarea>
-          <button class="btn btn-primary w-100" id="sendMsgBtn"><i class="bi bi-send"></i> 发送</button>
+      <!-- 番茄钟 -->
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-header text-center fw-bold">番茄钟</div>
+          <div class="card-body text-center">
+            <div class="timer display-4 fw-bold" id="timer">25:00</div>
+            <button class="btn btn-success btn-lg mt-3" id="startBtn">
+              <i class="bi bi-play-fill"></i> 开始专注
+            </button>
+            <button class="btn btn-outline-secondary mt-2" id="resetBtn">
+              <i class="bi bi-arrow-clockwise"></i> 重置
+            </button>
+          </div>
+        </div>
+
+        <!-- 专注时长图表 -->
+        <div class="card mt-3 shadow-sm">
+          <div class="card-header fw-bold">专注时长</div>
+          <div class="card-body">
+            <canvas id="focusChart" height="150"></canvas>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- 专注锁定 -->
-<div class="lock-overlay" id="lockOverlay">
-  <h2><i class="bi bi-shield-lock"></i> 专注中...</h2>
-  <p>请保持专注，不要打开干扰应用</p>
-  <button class="btn btn-danger mt-3" id="giveUpBtn"><i class="bi bi-x-lg"></i> 放弃本次番茄</button>
-</div>
-
-<!-- 新增任务模态框 -->
-<div class="modal fade" id="addTaskModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title">新增任务</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-      <div class="modal-body">
-        <input id="taskTitle" class="form-control mb-2" placeholder="任务标题">
-        <input id="taskDur" type="number" class="form-control" placeholder="分钟" value="25" min="5" max="120">
-      </div>
-      <div class="modal-footer"><button class="btn btn-primary" id="addTaskConfirm">添加</button></div>
     </div>
   </div>
-</div>
 
-<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<script src="script.js"></script>
+  <!-- 模态框（添加任务） -->
+  <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addTaskModalLabel">添加新任务</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="taskInput" class="form-control" placeholder="输入任务名称">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="saveTaskBtn">保存任务</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS 脚本 -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
-:root {
-  --primary: #0d6efd;
-  --secondary: #6c757d;
-  --bg: #f5f7fa;
-  --card-bg: #ffffff;
-  --text: #212529;
+.timer {
+  font-size: 3rem;
+  margin-top: 1rem;
 }
-body { background: var(--bg); color: var(--text); font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif; }
-.navbar { background: linear-gradient(135deg, #0d6efd, #0a58ca); }
-.timer { font-size: 4rem; font-weight: 700; color: var(--primary); text-align: center; margin: 1rem 0; }
-.card { border: none; border-radius: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,.05); background: var(--card-bg); }
-.lock-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); color: #fff; display: none; justify-content: center; align-items: center; flex-direction: column; z-index: 1050; }
-// 纯前端本地存储版本
-const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-let doneCount = +localStorage.getItem('doneCount') || 0;
+let timer;
+let timeLeft = 25 * 60;
+let isRunning = false;
+let doneCount = 0;
 
-function loadTasks() {
-  const list = document.getElementById('taskList');
-  list.innerHTML = '';
-  tasks.forEach((t, idx) => {
-    const li = document.createElement('li');
-    li.className = 'list-group-item d-flex justify-content-between';
-    li.innerHTML = `
-      <span>${t.title} (${t.duration}min)</span>
-      <button class="btn btn-sm ${t.done?'btn-secondary':'btn-outline-success'}" onclick="toggleTask(${idx})">${t.done?'已完成':'开始'}</button>`;
-    list.appendChild(li);
-  });
-  document.getElementById('doneCount').textContent = doneCount;
-}
-loadTasks();
+const timerDisplay = document.getElementById('timer');
+const startBtn = document.getElementById('startBtn');
+const resetBtn = document.getElementById('resetBtn');
+const taskList = document.getElementById('taskList');
+const addTaskBtn = document.getElementById('addTaskBtn');
+const saveTaskBtn = document.getElementById('saveTaskBtn');
+const taskInput = document.getElementById('taskInput');
+const doneCountSpan = document.getElementById('doneCount');
 
-function toggleTask(idx) {
-  if (tasks[idx].done) return;
-  tasks[idx].done = true;
-  doneCount++;
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-  localStorage.setItem('doneCount', doneCount);
-  loadTasks();
+// 时间格式化
+function formatTime(seconds) {
+  const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const s = String(seconds % 60).padStart(2, '0');
+  return `${m}:${s}`;
 }
 
-let sec = 25 * 60, timer = null;
-const timerEl = document.getElementById('timer');
-function renderTimer() {
-  const m = String(Math.floor(sec / 60)).padStart(2, '0');
-  const s = String(sec % 60).padStart(2, '0');
-  timerEl.textContent = `${m}:${s}`;
+// 更新显示
+function updateDisplay() {
+  timerDisplay.textContent = formatTime(timeLeft);
 }
-renderTimer();
 
-document.getElementById('startBtn').onclick = () => {
-  if (timer) return;
-  document.getElementById('lockOverlay').style.display = 'flex';
+// 启动番茄钟
+function startTimer() {
+  if (isRunning) return;
+  isRunning = true;
   timer = setInterval(() => {
-    sec--;
-    renderTimer();
-    if (sec <= 0) {
-      clearInterval(timer); timer = null;
-      document.getElementById('lockOverlay').style.display = 'none';
-      alert('专注完成！');
+    timeLeft--;
+    updateDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      isRunning = false;
+      doneCount++;
+      doneCountSpan.textContent = doneCount;
+      alert("番茄时间完成！");
+      timeLeft = 25 * 60;
+      updateDisplay();
     }
   }, 1000);
-};
-document.getElementById('resetBtn').onclick = () => {
-  clearInterval(timer); timer = null;
-  sec = 25 * 60;
-  renderTimer();
-  document.getElementById('lockOverlay').style.display = 'none';
-};
-document.getElementById('giveUpBtn').onclick = () => {
-  clearInterval(timer); timer = null;
-  sec = 25 * 60;
-  renderTimer();
-  document.getElementById('lockOverlay').style.display = 'none';
-};
+}
 
-document.getElementById('addTaskConfirm').onclick = () => {
-  const title = document.getElementById('taskTitle').value.trim();
-  const dur = +document.getElementById('taskDur').value;
-  if (!title) return alert('请输入任务');
-  tasks.push({ title, duration: dur, done: false });
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-  bootstrap.Modal.getInstance(document.getElementById('addTaskModal')).hide();
-  document.getElementById('taskTitle').value = '';
-  loadTasks();
-};
+// 重置番茄钟
+function resetTimer() {
+  clearInterval(timer);
+  isRunning = false;
+  timeLeft = 25 * 60;
+  updateDisplay();
+}
 
-document.getElementById('saveMoodBtn').onclick = () => {
-  const text = document.getElementById('moodText').value.trim();
-  if (!text) return;
+// 添加任务
+function addTask(text) {
   const li = document.createElement('li');
-  li.className = 'list-group-item';
+  li.className = 'list-group-item d-flex justify-content-between align-items-center';
   li.textContent = text;
-  document.getElementById('msgWall').appendChild(li);
-  document.getElementById('moodText').value = '';
-};
+  const delBtn = document.createElement('button');
+  delBtn.className = 'btn btn-sm btn-danger';
+  delBtn.innerHTML = '<i class="bi bi-trash"></i>';
+  delBtn.onclick = () => li.remove();
+  li.appendChild(delBtn);
+  taskList.appendChild(li);
+}
 
-// 推荐静态写死
-const recs = [
-  {title: "成人 ADHD 的 5 个时间管理技巧", url: "#"},
-  {title: "2 分钟正念冥想练习", url: "#"}
-];
-recs.forEach(r=>{
-  const li = document.createElement('li');
-  li.className = 'list-group-item';
-  li.innerHTML = `<a href="${r.url}" target="_blank">${r.title}</a>`;
-  document.getElementById('recList').appendChild(li);
+// 绑定事件
+startBtn.addEventListener('click', startTimer);
+resetBtn.addEventListener('click', resetTimer);
+saveTaskBtn.addEventListener('click', () => {
+  const task = taskInput.value.trim();
+  if (task !== '') {
+    addTask(task);
+    taskInput.value = '';
+    const modal = bootstrap.Modal.getInstance(document.getElementById('addTaskModal'));
+    modal.hide();
+  }
+});
+
+// 图表初始化
+const ctx = document.getElementById('focusChart').getContext('2d');
+const focusChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['今天'],
+    datasets: [{
+      label: '专注分钟',
+      data: [0],
+      backgroundColor: '#198754'
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        suggestedMax: 100
+      }
+    }
+  }
 });
