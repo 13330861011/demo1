@@ -233,3 +233,110 @@ document.getElementById('saveMoodBtn').onclick = async () => {
 </script>
 </body>
 </html>
+:root {
+  --primary: #0d6efd;
+  --secondary: #6c757d;
+  --bg: #f5f7fa;
+  --card-bg: #ffffff;
+  --text: #212529;
+}
+body { background: var(--bg); color: var(--text); font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif; }
+.navbar { background: linear-gradient(135deg, #0d6efd, #0a58ca); }
+.timer { font-size: 4rem; font-weight: 700; color: var(--primary); text-align: center; margin: 1rem 0; }
+.card { border: none; border-radius: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,.05); background: var(--card-bg); }
+.lock-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); color: #fff; display: none; justify-content: center; align-items: center; flex-direction: column; z-index: 1050; }n: column; z-index: 1050; }
+// 纯前端本地存储版本
+const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+let doneCount = +localStorage.getItem('doneCount') || 0;
+
+function loadTasks() {
+  const list = document.getElementById('taskList');
+  list.innerHTML = '';
+  tasks.forEach((t, idx) => {
+    const li = document.createElement('li');
+    li.className = 'list-group-item d-flex justify-content-between';
+    li.innerHTML = `
+      <span>${t.title} (${t.duration}min)</span>
+      <button class="btn btn-sm ${t.done?'btn-secondary':'btn-outline-success'}" onclick="toggleTask(${idx})">${t.done?'已完成':'开始'}</button>`;
+    list.appendChild(li);
+  });
+  document.getElementById('doneCount').textContent = doneCount;
+}
+loadTasks();
+
+function toggleTask(idx) {
+  if (tasks[idx].done) return;
+  tasks[idx].done = true;
+  doneCount++;
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  localStorage.setItem('doneCount', doneCount);
+  loadTasks();
+}
+
+let sec = 25 * 60, timer = null;
+const timerEl = document.getElementById('timer');
+function renderTimer() {
+  const m = String(Math.floor(sec / 60)).padStart(2, '0');
+  const s = String(sec % 60).padStart(2, '0');
+  timerEl.textContent = `${m}:${s}`;
+}
+renderTimer();
+
+document.getElementById('startBtn').onclick = () => {
+  if (timer) return;
+  document.getElementById('lockOverlay').style.display = 'flex';
+  timer = setInterval(() => {
+    sec--;
+    renderTimer();
+    if (sec <= 0) {
+      clearInterval(timer); timer = null;
+      document.getElementById('lockOverlay').style.display = 'none';
+      alert('专注完成！');
+    }
+  }, 1000);
+};
+document.getElementById('resetBtn').onclick = () => {
+  clearInterval(timer); timer = null;
+  sec = 25 * 60;
+  renderTimer();
+  document.getElementById('lockOverlay').style.display = 'none';
+};
+document.getElementById('giveUpBtn').onclick = () => {
+  clearInterval(timer); timer = null;
+  sec = 25 * 60;
+  renderTimer();
+  document.getElementById('lockOverlay').style.display = 'none';
+};
+
+document.getElementById('addTaskConfirm').onclick = () => {
+  const title = document.getElementById('taskTitle').value.trim();
+  const dur = +document.getElementById('taskDur').value;
+  if (!title) return alert('请输入任务');
+  tasks.push({ title, duration: dur, done: false });
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  bootstrap.Modal.getInstance(document.getElementById('addTaskModal')).hide();
+  document.getElementById('taskTitle').value = '';
+  loadTasks();
+};
+
+document.getElementById('saveMoodBtn').onclick = () => {
+  const text = document.getElementById('moodText').value.trim();
+  if (!text) return;
+  const li = document.createElement('li');
+  li.className = 'list-group-item';
+  li.textContent = text;
+  document.getElementById('msgWall').appendChild(li);
+  document.getElementById('moodText').value = '';
+};
+
+// 推荐静态写死
+const recs = [
+  {title: "成人 ADHD 的 5 个时间管理技巧", url: "#"},
+  {title: "2 分钟正念冥想练习", url: "#"}
+];
+recs.forEach(r=>{
+  const li = document.createElement('li');
+  li.className = 'list-group-item';
+  li.innerHTML = `<a href="${r.url}" target="_blank">${r.title}</a>`;
+  document.getElementById('recList').appendChild(li);
+});
